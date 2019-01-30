@@ -1,0 +1,7 @@
+tests:
+  playbooks:
+    - location: tests/tests-openshift.yaml
+results:
+  delivery_types:
+    email:
+      - caiqian@redhat.com
