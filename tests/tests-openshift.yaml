@@ -30,11 +30,6 @@
         path: "artifacts/"
         state: directory
 
-    - name: "Run openshift-deploy-simple-app test"
-      shell: ./runtest.sh | tee ../artifacts/test-openshift-deploy-simple-app.log
-      args:
-        chdir: openshift-deploy-simple-app
-
     - name: "Run verify python binary is present test (executes a command inside a running container)"
       block:
         - name: Log into the OpenShift cluster
