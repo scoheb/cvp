@@ -8,7 +8,7 @@
     - image_namespace: ""
     - image_name: "rhel7-init"
     - image_tag: "latest"
-    - openshift_cluster_url: "https://upshift.engineering.redhat.com"
+    - openshift_cluster_url: "https://paas.upshift.redhat.com"
     - openshift_auth_token: ""
     - openshift_username: "developer"
     - openshift_project_name: ""
