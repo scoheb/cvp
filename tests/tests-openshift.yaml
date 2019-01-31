@@ -40,14 +40,14 @@
         - name: Import the image into OpenShift
           shell: oc import-image {{ image_name }} --from={{ image_full_name }} --insecure=true --confirm
         - name: Get imported image registry URL
-          shell: oc get is {{ image_name }} --output=jsonpath={ .status.dockerImageRepository }
+          shell: oc get is {{ image_name }} --output=jsonpath='{ .status.dockerImageRepository }'
           register: imported_image_url
         - name: Start a dummy {{ image_namespace }}/{{ image_name }}:{{ image_tag }} container
           shell: oc run python-cmd-test -i --image={{ imported_image_url.stdout }} --command -- bash
         - name: Figure out a pod name for the started container
-          shell: oc get pods --selector deploymentconfig=python-cmd-test --output=jsonpath={ .items[*].metadata.name }
+          shell: oc get pods --selector deploymentconfig=python-cmd-test --output=jsonpath='{ .items[*].metadata.name }'
           register: pod_name
-        - name: Make sure python command is available in the container
+        - name: Make sure 'python' command is available in the container
           shell: oc exec {{ pod_name.stdout }} -- python --version
           register: python_cmd_run
         - debug:
