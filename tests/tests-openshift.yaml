@@ -3,8 +3,8 @@
   tags:
     - openshift
   vars:
-    - image_full_name: "brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/rhel7-init:latest"
-    - image_registry_url: "brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888"
+    - image_full_name: "registry.access.redhat.com/rhel7-init:latest"
+    - image_registry_url: "registry.access.redhat.com"
     - image_name: "rhel7-init"
     - image_tag: "latest"
     - openshift_cluster_url: "https://paas.upshift.redhat.com"
