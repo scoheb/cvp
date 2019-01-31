@@ -3,10 +3,9 @@
   tags:
     - openshift
   vars:
-    - image_full_name: "registry.access.redhat.com/rhscl/python-27-rhel7:latest"
-    - image_registry_url: "registry.access.redhat.com"
-    - image_namespace: "rhscl"
-    - image_name: "python-27-rhel7"
+    - image_full_name: "brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/rhel7-init:latest"
+    - image_registry_url: "brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888"
+    - image_name: "rhel7-init"
     - image_tag: "latest"
     - openshift_cluster_url: "https://paas.upshift.redhat.com"
     - openshift_auth_token: ""
@@ -14,10 +13,8 @@
     - openshift_project_name: ""
 
   environment:
-    VERSION: 2.7
     IMAGE_FULL_NAME: "{{ image_full_name }}"
     IMAGE_REGISTRY_URL: "{{ image_registry_url }}"
-    IMAGE_NAMESPACE: "{{ image_namespace }}"
     IMAGE_NAME: "{{ image_name }}"
     IMAGE_TAG: "{{ image_tag }}"
     OPENSHIFT_CLUSTER_URL: "{{ openshift_cluster_url }}"
@@ -31,7 +28,7 @@
         path: "artifacts/"
         state: directory
 
-    - name: "Run verify python binary is present test (executes a command inside a running container)"
+    - name: "Verify the image is sane"
       block:
         - name: Log into the OpenShift cluster
           shell: oc login {{ openshift_cluster_url }} --token="{{ openshift_auth_token }}" --insecure-skip-tls-verify
@@ -42,14 +39,14 @@
         - name: Get imported image registry URL
           shell: oc get is {{ image_name }} --output=jsonpath='{ .status.dockerImageRepository }'
           register: imported_image_url
-        - name: Start a dummy {{ image_namespace }}/{{ image_name }}:{{ image_tag }} container
-          shell: oc run python-cmd-test -i --image={{ imported_image_url.stdout }} --command -- bash
+        - name: Start a dummy {{ image_name }}:{{ image_tag }} container
+          shell: oc run image-sanity-test -i --image={{ imported_image_url.stdout }} --command -- bash
         - name: Figure out a pod name for the started container
-          shell: oc get pods --selector deploymentconfig=python-cmd-test --output=jsonpath='{ .items[*].metadata.name }'
+          shell: oc get pods --selector deploymentconfig=image-sanity-test --output=jsonpath='{ .items[*].metadata.name }'
           register: pod_name
-        - name: Make sure 'python' command is available in the container
-          shell: oc exec {{ pod_name.stdout }} -- python --version
-          register: python_cmd_run
+        - name: Run a script inside the container
+          shell: ./runtest.sh {{ pod_name.stdout }} | tee ../artifacts/tests-openshift.log
+          register: image_sanity_run
         - debug:
-            msg: "{{ python_cmd_run.stderr }}" # python --version actually prints the version to STDERR, not STDOUT
+            msg: "{{ image_sanity_run.stderr }}" # the script actually prints information to STDERR, not STDOUT
 
