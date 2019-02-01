@@ -43,8 +43,14 @@
           shell: oc run image-sanity-test -i --image={{ imported_image_url.stdout }} --command -- bash
         - name: Figure out a pod name for the started container
           shell: oc get pods --selector deploymentconfig=image-sanity-test --output=jsonpath='{ .items[*].metadata.name }'
-        - name: Build a layer image
+        - name: Build a layer image container
           shell: oc new-app https://github.com/qiancai/cvp --strategy=docker
+        - name: oc logs
+          shell: oc logs -f bc/cvp
+        - name: oc status
+          shell: oc status
+        - name: Figure out a pod name for the layer image container
+          shell: oc get pods --selector cvp --output=jsonpath='{ .items[*].metadata.name }'
           register: pod_name
         - name: Run a script inside the container
           shell: ./runtest.sh {{ pod_name.stdout }}
