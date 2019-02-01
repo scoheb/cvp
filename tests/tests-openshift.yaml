@@ -45,7 +45,7 @@
           shell: oc get pods --selector deploymentconfig=image-sanity-test --output=jsonpath='{ .items[*].metadata.name }'
           register: pod_name
         - name: Run a script inside the container
-          shell: ./runtest.sh {{ pod_name.stdout }} | tee artifacts/tests-openshift.log
+          shell: ./runtest.sh {{ pod_name.stdout }}
           register: image_sanity_run
         - debug:
             msg: "{{ image_sanity_run.stderr }}" # the script actually prints information to STDERR, not STDOUT
