@@ -46,7 +46,7 @@
         - name: Build a layer image container
           shell: oc new-app https://github.com/qiancai/cvp --strategy=docker
         - name: oc logs
-          shell: oc logs -f bc/cvp
+          shell: oc logs -f bc/cvp && oc logs -f dc/cvp
         - name: oc status
           shell: oc status
         - name: Figure out a pod name for the layer image container
