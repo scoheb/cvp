@@ -43,6 +43,9 @@
           shell: oc run image-sanity-test -i --image={{ imported_image_url.stdout }} --command -- bash
         - name: Figure out a pod name for the started container
           shell: oc get pods --selector deploymentconfig=image-sanity-test --output=jsonpath='{ .items[*].metadata.name }'
+          register: pod_name
+        - name: Run a script inside the container
+          shell: ./runtest.sh {{ pod_name.stdout }}
         - name: Build a layer image container
           shell: oc new-app https://github.com/qiancai/cvp --strategy=docker
         - name: oc logs
@@ -53,7 +56,7 @@
           shell: oc get pods --selector deploymentconfig=cvp --output=jsonpath='{ .items[*].metadata.name }'
           register: pod_name
         - name: Run a script inside the container
-          shell: ./runtest.sh {{ pod_name.stdout }}
+          shell: ./runextra.sh {{ pod_name.stdout }}
           register: image_sanity_run
         - debug:
             msg: "{{ image_sanity_run.stderr }}" # the script actually prints information to STDERR, not STDOUT
