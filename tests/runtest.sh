@@ -2,10 +2,10 @@
 
 echo "- start: check sigatures."
 sig=$(oc exec $1 -- bash -c "for i in $(rpm -qa | grep -v gpg-pubkey); \
-      do rpm -qi $i | grep ^Signature; done | cut -f3 -d"","" |
-      sed 's/Key ID//' | tr -s ' ' | cut -b10- | sort | uniq -c")
+      do rpm -qi $i | grep ^Signature; done | cut -f3 -d, |
+      sort | uniq")
 
-if [[ "$sig" != '443 fd431d51' ]]; then
+if [[ "$sig" != 'Key ID 199e2f91fd431d51' ]]; then
 	echo "- error: unexpected signatures are $sig" >&2
 	exit 1
 fi
