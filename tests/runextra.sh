@@ -1,7 +1,10 @@
 #!/bin/bash
 
 echo "- start: check traceroute."
-if traceroute google.com; then
+# debug
+oc exec $1 -- rpm -ql traceroute
+
+if ! oc exec $1 -- /usr/bin/traceroute google.com; then
 	echo "- error: unexpected traceroute." >&2
 	exit 1
 fi
