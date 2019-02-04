@@ -48,9 +48,9 @@
           shell: ./runtest.sh {{ pod_name.stdout }}
         - name: Build a layer image container
           shell: oc new-app https://github.com/qiancai/cvp --strategy=docker
-        - name: oc logs
+        - name: Wait for the container
           shell: oc logs -f bc/cvp && oc logs -f dc/cvp
-        - name: oc status
+        - name: Get the status
           shell: oc status
         - name: Figure out a pod name for the layer image container
           shell: oc get pods --selector deploymentconfig=cvp --output=jsonpath='{ .items[*].metadata.name }'

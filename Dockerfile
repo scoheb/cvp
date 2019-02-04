@@ -1,5 +1,5 @@
 FROM rhel7-init
-RUN yum -y install httpd
+RUN yum -y install httpd traceroute
 RUN yum clean all; systemctl enable httpd
 RUN echo "Hello World!" > /var/www/html/index.html
 STOPSIGNAL SIGRTMIN+3
