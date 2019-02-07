@@ -47,7 +47,7 @@
         - name: Run a script inside the container
           shell: ./runtest.sh {{ pod_name.stdout }}
         - name: Build a layer image container
-          shell: oc new-app https://github.com/qiancai/cvp --strategy=docker
+          shell: oc new-app https://github.com/scoheb/cvp --strategy=docker
         - name: Wait for the container
           shell: oc logs -f bc/cvp && oc logs -f dc/cvp
         - name: Get the status
